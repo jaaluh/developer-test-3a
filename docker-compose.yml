@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres
+    restart: no
+    shm_size: 1024mb
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: app
+    volumes:
+    - pgdata:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: no
+    ports:
+      - 3434:8080
+
+  server:
+    build:
+      context: server
+    command: npm start
+    restart: no
+    volumes:
+      - ./server/src:/usr/src/app/src
+    environment:
+      - DB_NAME=app
+      - DB_PASS=dev
+      - DB_USER=dev
+      - DB_HOST=db
+    ports:
+      - 3131:3131
+
+  client:
+    build:
+      context: client
+    command: npm start
+    restart: unless-stopped
+    volumes:
+      - ./client/src:/usr/src/app/src
+      - ./client/public:/usr/src/app/public
+      - ./client/index.html:/usr/src/app/index.html
+      - ./client/vite.config.ts:/usr/src/app/vite.config.ts
+    ports:
+      - 3232:3232
+
+volumes:
+  pgdata:
