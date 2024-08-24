@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres
+    restart: no
+    shm_size: 1024mb
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: app-test
+
+  jest: 
+    build:
+      context: server
+      dockerfile: Dockerfile.test
+    command: npm test
+    restart: no
+    volumes:
+      - ./server/tests:/usr/src/app/tests
+    environment:
+      - NODE_ENV=test
+      - DB_NAME=app-test
+      - DB_PASS=test
+      - DB_USER=test
+      - DB_HOST=db
+    depends_on:
+      - db

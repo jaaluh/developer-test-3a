@@ -1,3 +1,5 @@
+import { Category, Product } from './db/dbTypes';
+
 export interface ProductData {
   name: string;
   categories: ProductApiCategory[];
@@ -33,3 +35,5 @@ export enum CurrencyCode {
   USD = 'USD',
   EUR = 'EUR'
 }
+
+export type ProductWithCategories = (Product & { categories: Category[]});

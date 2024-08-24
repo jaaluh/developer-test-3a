@@ -2,20 +2,28 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "nodemon ./src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon ./src/server.ts",
+    "test": "jest --watchAll"
   },
   "author": "Jaakko Luhtamaki",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
     "@types/pg": "^8.11.6",
+    "@types/supertest": "^6.0.2",
+    "@types/uuid": "^10.0.0",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.4",
-    "ts-node": "^10.9.2"
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "uuid": "^10.0.0"
   },
   "dependencies": {
-    "@types/express": "^4.17.21",
     "axios": "^1.7.5",
     "express": "^4.19.2",
     "kysely": "^0.27.4",
