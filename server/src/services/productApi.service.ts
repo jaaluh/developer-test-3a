@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ProductApiResponse } from '../types';
 const apiUrl = 'https://raw.githubusercontent.com/Exove/developer-test/main/material/products.json';
 
-export const getProducts = async () : Promise<ProductApiResponse|null> => {
+const getProducts = async () : Promise<ProductApiResponse|null> => {
   try {
     const res = await axios.get(apiUrl);
     return res.data; 
@@ -13,3 +13,6 @@ export const getProducts = async () : Promise<ProductApiResponse|null> => {
   }
 }
 
+export default {
+  getProducts
+}

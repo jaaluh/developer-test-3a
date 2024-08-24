@@ -1,9 +1,8 @@
 import express, { Express, Request, Response } from 'express';
-import * as productApiService from './services/productApi.service';
-import * as productService from './services/product.service';
 import { CurrencyCode, Language } from './types';
 import { isEnum } from './utility';
-
+import productService from './services/product.service';
+import productApiService from './services/productApi.service';
 export const app: Express = express();
 
 app.post('/api/products/import', async (req: Request, res: Response) => {
