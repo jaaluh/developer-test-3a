@@ -1,6 +1,8 @@
 import express, { Express, Request, Response } from 'express';
 import * as productApiService from './services/productApi.service';
 import * as productService from './services/product.service';
+import { Language } from './types';
+import { isEnum } from './utility';
 
 export const app: Express = express();
 
@@ -23,7 +25,8 @@ app.post('/api/products/import', async (req: Request, res: Response) => {
 })
 
 app.get('/api/products', async (req: Request, res: Response) => {
-  const products = await productService.getAllProducts();
+  const lang = isEnum(req.query.lang, Language) ? req.query.lang : Language.en;
+  const products = await productService.getAllProducts(lang);
   return res.json({ products })
 });
 

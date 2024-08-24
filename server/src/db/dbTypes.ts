@@ -6,6 +6,7 @@ import {
   Selectable,
   Updateable,
 } from 'kysely'
+import { Language } from '../types';
 
 /************ Product ************/
 export interface ProductTable {
@@ -49,9 +50,22 @@ export type ProductCategory = Selectable<ProductCategoryTable>
 export type NewProductCategory = Insertable<ProductCategoryTable>
 export type ProductCategoryUpdate = Updateable<ProductCategoryTable>
 
+/************ ProductTranslations ************/
+export interface ProductTranslationsTable {
+  product_id: number;
+  name: string;
+  description: string | null;
+  lang: Language
+}
+
+export type ProductTranslations = Selectable<ProductTranslationsTable>
+export type NewProductTranslations = Insertable<ProductTranslationsTable>
+export type ProductTranslationsUpdate = Updateable<ProductTranslationsTable>
+
 /************ Database ************/
 export interface Database {
   product: ProductTable
   category: CategoryTable
   product_category: ProductCategoryTable
+  product_translations: ProductTranslationsTable
 }

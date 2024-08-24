@@ -1,15 +1,27 @@
 import { Transaction } from 'kysely';
 import { db } from '../db/db';
 import { Database, Product } from '../db/dbTypes';
-import { ProductData } from '../types';
+import { Language, ProductData } from '../types';
 import { createOrUpdateCategory } from './category.service';
 import { setProductCategories } from './productCategory.service';
 import { jsonArrayFrom } from 'kysely/helpers/postgres';
 
-export const getAllProducts = async () => {
+export const getAllProducts = async (lang: Language) => {
   return db
     .selectFrom('product')
+    .innerJoin(
+      'product_translations',
+      (join) => join
+        .onRef('product_translations.product_id', '=', 'product.id')
+        .on('product_translations.lang', '=', lang)
+    )
     .selectAll('product')
+    // Select translated value if it exists
+    .select(eb => [
+      eb.fn.coalesce('product_translations.name', 'product.name').as('name'),
+      eb.fn.coalesce('product_translations.description', 'product.description').as('description')
+    ])
+    // Include categories
     .select((eb) => [
       jsonArrayFrom(
         eb.selectFrom('product_category')
@@ -20,6 +32,27 @@ export const getAllProducts = async () => {
     ])
     .execute();
 };
+
+const addOrUpdateProductTranslations = async (productId: number, lang: Language, name: string, description: string | null, trx: Transaction<Database>) => {
+  const existingTranslation = await trx.selectFrom('product_translations')
+    .selectAll()
+    .where('product_id', '=', productId)
+    .where('lang', '=', lang)
+    .executeTakeFirst()
+
+  if (existingTranslation) {
+    return trx.updateTable('product_translations')
+      .set({ name, description })
+      .where('product_id', '=', productId)
+      .where('lang', '=', lang)
+      .execute()
+  }
+  else {
+    return trx.insertInto('product_translations')
+    .values({ lang, name, description, product_id: productId })
+    .execute()
+  }
+}
 
 const updateProductFromProductData = async (product: Product, productData: ProductData, trx: Transaction<Database>) => {
   const changed =
@@ -38,10 +71,13 @@ const updateProductFromProductData = async (product: Product, productData: Produ
     updated_at: new Date()
   }).where('id', '=', product.id).execute();
 
+  // assume the language in the API data is English.
+  const lang = Language.en; 
+  await addOrUpdateProductTranslations(product.id, lang, product.name, product.description, trx);
 };
 
 const createProductFromProductData = async (productData: ProductData, trx: Transaction<Database>) => {
-  return trx.insertInto('product')
+  const product = await trx.insertInto('product')
     .values({
       name: productData.name,
       uuid: productData.id,
@@ -50,6 +86,12 @@ const createProductFromProductData = async (productData: ProductData, trx: Trans
     })
     .returningAll()
     .executeTakeFirstOrThrow();
+
+  // assume the language in the API data is English.
+  const lang = Language.en;  
+  await addOrUpdateProductTranslations(product.id, lang, product.name, product.description, trx);
+
+  return product;
 };
 
 export const createOrUpdateProduct = async (productData: ProductData) => {
