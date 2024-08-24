@@ -30,6 +30,16 @@
 
 - `http://localhost:3131` is just for the API between client and server
 
+## Automated tests
+
+- Currently there are a few integration/API tests to check that e.g. data import, currencies and translations work as expected
+
+- I used Jest as the test runner because I previous experience with it
+
+- For a real-world project, additional tests could be added to ensure everything works as expected, depending on factors such as the project's criticality and the potential impact of bugs
+
+- run `./run-api-tests.sh` to start tests
+
 ## Implementation
 
 ### Technologies
