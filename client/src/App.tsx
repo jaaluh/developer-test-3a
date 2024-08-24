@@ -1,14 +1,18 @@
+import { useState } from 'react';
 import './App.scss'
 import axios from 'axios';
 
 function App() {
+  const [currencyCode, setCurrencyCode] = useState('EUR');
+  const [lang, setLang] = useState('en');
+
   const importProductData = async () => {
     const res = await axios.post('/api/products/import')
     console.log(res.data)
   }
 
   const fetchProductData = async () => {
-    const res = await axios.get('/api/products')
+    const res = await axios.get(`/api/products?lang=${lang}&currencyCode=${currencyCode}`)
     console.log(res.data)
   }
 

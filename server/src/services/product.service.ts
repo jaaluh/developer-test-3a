@@ -1,13 +1,25 @@
 import { Transaction } from 'kysely';
 import { db } from '../db/db';
 import { Database, Product } from '../db/dbTypes';
-import { Language, ProductData } from '../types';
+import { CurrencyCode, Language, ProductData } from '../types';
 import { createOrUpdateCategory } from './category.service';
 import { setProductCategories } from './productCategory.service';
 import { jsonArrayFrom } from 'kysely/helpers/postgres';
+import { getExchangeRate } from './currency.service';
 
-export const getAllProducts = async (lang: Language) => {
-  return db
+export const setVariationCurrencyFromExchangeRate = async (variations: Product['variations'], currencyCode: CurrencyCode) => {
+  const variationsWithPrice = variations.filter(v => v.price);
+  if (variationsWithPrice.length === 0) {
+    return;
+  }
+  const exchangeRate = await getExchangeRate(currencyCode);
+  for (const v of variationsWithPrice) {
+    v.price = v.price * exchangeRate;
+  }
+}
+
+export const getAllProducts = async (lang: Language, currencyCode: CurrencyCode) => {
+  const products = await db
     .selectFrom('product')
     .leftJoin(
       'product_translations',
@@ -41,6 +53,12 @@ export const getAllProducts = async (lang: Language) => {
       ).as('categories'),
     ])
     .execute();
+    
+    for (const p of products) {
+      await setVariationCurrencyFromExchangeRate(p.variations, currencyCode);
+    }
+
+    return products;
 };
 
 const addOrUpdateProductTranslations = async (productId: number, lang: Language, name: string, description: string | null, trx: Transaction<Database>) => {

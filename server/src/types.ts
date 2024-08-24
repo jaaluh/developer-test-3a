@@ -28,3 +28,8 @@ export enum Language {
   fi = 'fi',
   sv = 'sv'
 }
+
+export enum CurrencyCode {
+  USD = 'USD',
+  EUR = 'EUR'
+}

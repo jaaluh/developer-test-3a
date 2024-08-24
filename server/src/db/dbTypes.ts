@@ -6,7 +6,7 @@ import {
   Selectable,
   Updateable,
 } from 'kysely'
-import { Language } from '../types';
+import { CurrencyCode, Language } from '../types';
 
 /************ Product ************/
 export interface ProductTable {
@@ -18,7 +18,7 @@ export interface ProductTable {
     price: number
     size: string | null
     paper_size: string | null
-  }>
+  }[]>
   created_at: ColumnType<Date, string | undefined, never>
   updated_at: ColumnType<Date, string | undefined, Date>
 }
@@ -73,6 +73,16 @@ export type CategoryTranslations = Selectable<CategoryTranslationsTable>
 export type NewCategoryTranslations = Insertable<CategoryTranslationsTable>
 export type CategoryTranslationsUpdate = Updateable<CategoryTranslationsTable>
 
+/************ CurrencyExchangeRate ************/
+export interface CurrencyExchangeRatesTable {
+  currency_code: CurrencyCode;
+  rate: number;
+}
+
+export type CurrencyExchangeRate = Selectable<CurrencyExchangeRatesTable>
+export type NewCurrencyExchangeRate = Insertable<CurrencyExchangeRatesTable>
+export type CurrencyExchangeRateUpdate = Updateable<CurrencyExchangeRatesTable>
+
 
 /************ Database ************/
 export interface Database {
@@ -81,4 +91,5 @@ export interface Database {
   product_category: ProductCategoryTable
   product_translations: ProductTranslationsTable
   category_translations: CategoryTranslationsTable
+  currency_exchange_rates: CurrencyExchangeRatesTable
 }
