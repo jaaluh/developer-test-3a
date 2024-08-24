@@ -30,6 +30,22 @@
 
 - `http://localhost:3131` is just for the API between client and server
 
+### Web UI
+
+![Web UI](docs/web_ui.png)
+
+- Through the UI you can:
+
+  - Request the server to import the data from the product API
+
+  - Clear data from the SQL database
+
+  - Change language (but you would need to insert finnish translations to the database for it to actually do anything, it fallbacks to the original language if no translation is available)
+
+  - Change currency: This changes the prices of the variations based on an exchage rate stored in database
+
+    - View the product data in the SQL database in a very basic format
+
 ## Automated tests
 
 - Currently there are a few integration/API tests to check that e.g. data import, currencies and translations work as expected
@@ -75,6 +91,12 @@
   - product_category (links products to categories)
 
   - currency_exchange_rates (support for extra currencies through conversion)
+
+![Web UI](docs/er_diagram.png)
+
+- Given more specific requirements I might come up with another design, but this should be quite scalable and fill the requirements as far as I understood them from the specs
+
+- With a larger data set there might be a need to add some indexes to make the queries perform better. But this depends heavily on the actual use case of the database and how the data needs to be queried
 
 #### Saving only parts that have changed 
 
