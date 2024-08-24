@@ -34,7 +34,7 @@
 
 - Currently there are a few integration/API tests to check that e.g. data import, currencies and translations work as expected
 
-- I used Jest as the test runner because I previous experience with it
+- I used Jest as the test runner because I have previous experience with it
 
 - For a real-world project, additional tests could be added to ensure everything works as expected, depending on factors such as the project's criticality and the potential impact of bugs
 
@@ -48,7 +48,9 @@
 
 - For database I used PostgreSQL because that's what I have used the most lately
 
-- For querying the database I used the Nodejs package [Kysely](https://github.com/kysely-org/kysely). I used this because I have read about it and wanted to give it a try
+- For querying the database I used the Nodejs SQL query builder package [Kysely](https://github.com/kysely-org/kysely). I used this because I have read about it and wanted to give it a try.
+
+  - For a larger project a full ORM could be a good alternative to make development faster (although you lose some control over the generated SQL vs query builder)
 
 - While it was not in the requirements, I decided to implement a simple frontend with React
 
