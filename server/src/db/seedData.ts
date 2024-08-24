@@ -3,7 +3,7 @@ import { db } from './db';
 
 const currencyRates: {[key: string]: number} = {
   EUR: 1,
-  USD: 0.89
+  USD: 1.12
 }
 
 export const insertSeedData = async () => {
