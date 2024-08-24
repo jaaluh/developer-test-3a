@@ -91,7 +91,9 @@ const addCategories = async (productId: number, categoryIds: number[], trx?: Tra
   const categoriesToAdd = categoryIds.map(id => (
     { category_id: id, product_id: productId }
   ));
-  await (trx ?? db).insertInto('product_category').values(categoriesToAdd).executeTakeFirstOrThrow();
+  if (categoriesToAdd.length) {
+    await (trx ?? db).insertInto('product_category').values(categoriesToAdd).executeTakeFirstOrThrow();
+  }
 };
 
 const getCategories = async (productId: number) => {

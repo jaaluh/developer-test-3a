@@ -17,7 +17,7 @@ export interface ProductTable {
   variations: JSONColumnType<{
     price: number
     size: string | null
-    paper_size: string | null
+    'paper size': string | null
   }[]>
   created_at: ColumnType<Date, string | undefined, never>
   updated_at: ColumnType<Date, string | undefined, Date>

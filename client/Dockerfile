@@ -10,6 +10,8 @@ COPY ./tsconfig*.json /usr/src/app
 
 COPY ./vite.config.ts /usr/src/app
 
+COPY ./eslint.config.js /usr/src/app
+
 COPY ./index.html /usr/src/app
 
 COPY ./src /usr/src/app/src

@@ -13,7 +13,7 @@ const setVariationCurrencyFromExchangeRate = async (variations: Product['variati
   }
   const exchangeRate = await currencyRepository.get(currencyCode);
   for (const v of variationsWithPrice) {
-    v.price = v.price * exchangeRate;
+    v.price = Number((v.price * exchangeRate).toFixed(2));
   }
 };
 
