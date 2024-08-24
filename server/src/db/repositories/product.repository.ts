@@ -40,6 +40,10 @@ const getAll = async (lang: Language,) => {
     ]).execute();
 };
 
+const get = async (name: string) => {
+  return db.selectFrom('product').selectAll().where('name', '=', name).executeTakeFirst();
+}
+
 const create = async (newProduct: NewProduct, trx?: Transaction<Database>) => {
   return (trx ?? db).insertInto('product')
     .values(newProduct)
@@ -105,6 +109,7 @@ const getCategories = async (productId: number) => {
 
 export default {
   getAll,
+  get,
   create,
   update,
   getTranslations,

@@ -78,7 +78,7 @@ const setProductCategories = async (productId: number, categoryIds: number[], tr
 
 const createOrUpdateProduct = async (productData: ProductData) => {
   await db.transaction().execute(async (trx) => {
-    let product = await trx.selectFrom('product').selectAll().where('name', '=', productData.name).executeTakeFirst();
+    let product = await productRepository.get(productData.name);
     if (product) {
       await updateProductFromProductData(product, productData, trx);
     }
