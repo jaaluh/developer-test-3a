@@ -9,7 +9,7 @@ import { jsonArrayFrom } from 'kysely/helpers/postgres';
 export const getAllProducts = async (lang: Language) => {
   return db
     .selectFrom('product')
-    .innerJoin(
+    .leftJoin(
       'product_translations',
       (join) => join
         .onRef('product_translations.product_id', '=', 'product.id')
@@ -26,7 +26,17 @@ export const getAllProducts = async (lang: Language) => {
       jsonArrayFrom(
         eb.selectFrom('product_category')
           .innerJoin('category', 'category.id', 'product_category.category_id')
-          .select(['category.id', 'category.name', 'category.uuid'])
+          .leftJoin(
+            'category_translations',
+            (join) => join
+              .onRef('category_translations.category_id', '=', 'category.id')
+              .on('category_translations.lang', '=', lang)
+          )
+          .select(eb => [
+            'category.id',
+            'category.uuid',
+            eb.fn.coalesce('category_translations.name', 'category.name').as('name'),
+          ])
           .whereRef('product_category.product_id', '=', 'product.id')
       ).as('categories'),
     ])

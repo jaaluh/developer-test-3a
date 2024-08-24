@@ -62,10 +62,23 @@ export type ProductTranslations = Selectable<ProductTranslationsTable>
 export type NewProductTranslations = Insertable<ProductTranslationsTable>
 export type ProductTranslationsUpdate = Updateable<ProductTranslationsTable>
 
+/************ CategoryTranslations ************/
+export interface CategoryTranslationsTable {
+  category_id: number;
+  name: string;
+  lang: Language
+}
+
+export type CategoryTranslations = Selectable<CategoryTranslationsTable>
+export type NewCategoryTranslations = Insertable<CategoryTranslationsTable>
+export type CategoryTranslationsUpdate = Updateable<CategoryTranslationsTable>
+
+
 /************ Database ************/
 export interface Database {
   product: ProductTable
   category: CategoryTable
   product_category: ProductCategoryTable
   product_translations: ProductTranslationsTable
+  category_translations: CategoryTranslationsTable
 }

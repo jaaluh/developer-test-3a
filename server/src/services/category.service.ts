@@ -1,6 +1,28 @@
 import { Transaction } from 'kysely';
 import { Category, Database } from '../db/dbTypes';
-import { ProductApiCategory } from '../types';
+import { Language, ProductApiCategory } from '../types';
+
+const addOrUpdateCategoryTranslations = async (categoryId: number, lang: Language, name: string, trx: Transaction<Database>) => {
+  const existingTranslation = await trx.selectFrom('category_translations')
+    .selectAll()
+    .where('category_id', '=', categoryId)
+    .where('lang', '=', lang)
+    .executeTakeFirst()
+
+  if (existingTranslation) {
+    return trx.updateTable('category_translations')
+      .set({ name })
+      .where('category_id', '=', categoryId)
+      .where('lang', '=', lang)
+      .execute()
+  }
+  else {
+    return trx.insertInto('category_translations')
+    .values({ lang, name, category_id: categoryId })
+    .execute()
+  }
+}
+
 
 export const updateCategoryFromProductApiCategory = async (category: Category, productApiCategory: ProductApiCategory, trx: Transaction<Database>) => {
   const changed = productApiCategory.id !== category.uuid;
@@ -11,16 +33,26 @@ export const updateCategoryFromProductApiCategory = async (category: Category, p
     uuid: productApiCategory.id,
     updated_at: new Date()
   }).where('id', '=', category.id).execute();
+
+  // assume the language in the API data is English.
+  const lang = Language.en; 
+  await addOrUpdateCategoryTranslations(category.id, lang, category.name, trx);
 };
 
 export const createCategoryFromProductApiCategory = async (productApiCategory: ProductApiCategory, trx: Transaction<Database>) => {
-  return trx.insertInto('category')
+  const category = await trx.insertInto('category')
     .values({
       name: productApiCategory.name,
       uuid: productApiCategory.id
     })
     .returningAll()
     .executeTakeFirstOrThrow();
+
+  // assume the language in the API data is English.
+  const lang = Language.en; 
+  await addOrUpdateCategoryTranslations(category.id, lang, category.name, trx);
+
+  return category;
 };
 
 export const createOrUpdateCategory = async (productApiCategory: ProductApiCategory, trx: Transaction<Database>) => {
