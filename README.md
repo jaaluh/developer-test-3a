@@ -44,7 +44,7 @@
 
   - Change currency: This changes the prices of the variations based on an exchage rate stored in database
 
-    - View the product data in the SQL database in a very basic format
+  - View the product data in the SQL database in a very basic format
 
 ## Automated tests
 
@@ -64,15 +64,21 @@
 
 - For database I used PostgreSQL because that's what I have used the most lately
 
+- I chose TypeScript as the main language. Given the choice between vanilla JavaScript and TypeScript, I would always opt for TypeScript. The minimal overhead of writing types is well worth it, as it reduces cognitive load for developers by eliminating the need to constantly re-check everything. It also reduces bugs, makes refactoring easier, and helps onboarding new developers to the project.
+
 - For querying the database I used the Nodejs SQL query builder package [Kysely](https://github.com/kysely-org/kysely). I used this because I have read about it and wanted to give it a try.
 
   - For a larger project a full ORM could be a good alternative to make development faster (although you lose some control over the generated SQL vs query builder)
 
 - While it was not in the requirements, I decided to implement a simple frontend with React
 
-  - I needed some way to trigger the import from the product API anyway, a web UI seemed like a nice user friendly solution
+  - I needed some way to trigger the import from the product API anyway and a web UI seemed like a nice, user friendly solution
 
-  - Another option would have been some kind of command line utility 
+    - Another option would have been some kind of command line utility 
+
+  - Why React? Lately, I have used mostly Angular and it's been a while since I made anything with React, so wanted to see what's new and if I still remember how to use it. In the end, the UI is so simple that I didn't really get to do anything interesting with React and could have implemented it in plain Javascript/HTML/CSS also.
+
+    - Since I haven't used React in a while, I'm not entirely sure that everything in the implementation follows best practices. If I were to use React in a real-world project, I would first spend some time re-learning modern React, studying best practices, and, if possible, seeking feedback from my peers.
 
 ### Database design
 
@@ -94,7 +100,7 @@
 
 ![Web UI](docs/er_diagram.png)
 
-- Given more specific requirements I might come up with another design, but this should be quite scalable and fill the requirements as far as I understood them from the specs
+- Given more specific requirements I might have come up with another design, but this should be quite scalable and fill the requirements as far as I understood them from the specs
 
 - With a larger data set there might be a need to add some indexes to make the queries perform better. But this depends heavily on the actual use case of the database and how the data needs to be queried
 
@@ -135,3 +141,12 @@
 
 - The prices can then be set based on the exchange rate of the selected currency when products are fetched from the db
 
+## Final thoughts
+
+- Overall the test was a fun little project and made me think about the solution for a bit. Once I got started, I kinda wanted to continue working with it.
+
+- I'm quite happy with the results, but if there is one thing I would do differently in a real-world project, it would be to really get a good understanding of what we are building, why, and what the system must be able to accomplish. This ensures that we, as developers, can make the right architecture and technology decisions to deliver a working product to the customer.
+
+- Other than that, I might choose an ORM (e.g. Sequelize) to handle some of the heavy lifting with the database. I might also opt for Nest.js instead of Express for the backend, as I believe a structured framework can make maintaining the codebase easier, especially when multiple developers are working on the same project.
+
+- And of course, more automated tests could always be added if there is time in the project. I believe that even if there’s a slight chance the project will become more complex in the future, the overhead of writing unit, integration, and end-to-end tests from the beginning will pay off later. Additionally, I would add some linting rules to enforce a consistent coding standard, and using a static code analysis tool like SonarQube would be beneficial for the project's long-term health (e.g., forbidding overly long functions, catching subtle bugs, etc.).
